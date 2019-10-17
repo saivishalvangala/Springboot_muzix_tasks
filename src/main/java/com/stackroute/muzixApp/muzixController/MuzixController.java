@@ -2,6 +2,7 @@ package com.stackroute.muzixApp.muzixController;
 
 import com.stackroute.muzixApp.muzix.Muzix;
 import com.stackroute.muzixApp.muzixService.MuzixService;
+import io.swagger.annotations.Api;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("muzix")
+@RequestMapping("/muzix")
+//@Api(value="onlinestore", description="Operations pertaining to products in Online Store")
 public class MuzixController {
 
     MuzixService muzixService;
