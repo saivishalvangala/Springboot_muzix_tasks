@@ -1,4 +1,4 @@
-package com.stackroute.muzixApp.swaggerConfig;
+package com.stackroute.muzixApp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
