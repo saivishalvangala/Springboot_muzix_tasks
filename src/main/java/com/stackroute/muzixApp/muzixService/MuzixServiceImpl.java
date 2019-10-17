@@ -1,5 +1,7 @@
 package com.stackroute.muzixApp.muzixService;
 
+import com.stackroute.muzixApp.exceptions.TrackAlreadyExistsException;
+import com.stackroute.muzixApp.exceptions.TrackNotFoundException;
 import com.stackroute.muzixApp.muzix.Muzix;
 import com.stackroute.muzixApp.muzixRepository.MuzixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,10 @@ public class MuzixServiceImpl implements MuzixService {
 
 
     @Override
-    public Muzix saveTrack(Muzix muzix) {
+    public Muzix saveTrack(Muzix muzix) throws TrackAlreadyExistsException{
+        if(muzixRepository.existsById(muzix.getTrackId())){
+            throw new TrackAlreadyExistsException("track you are trying to save already exists");
+        }
         Muzix savedMuzix=muzixRepository.save(muzix);
         return savedMuzix;
     }
@@ -34,20 +39,20 @@ public class MuzixServiceImpl implements MuzixService {
     }
 
     @Override
-    public boolean deleteTrack(int id) {
-        Muzix muzix=muzixRepository.getOne(id);
-        if(muzix==null)
+    public void  deleteTrack(int id)throws  TrackNotFoundException  {
+
+        if(!(muzixRepository.existsById(id)))
         {
-            return false;
+            throw new TrackNotFoundException("track you are searching is not found");
         }
         else {
             muzixRepository.deleteById(id);
-            return true;
+
         }
     }
 
     @Override
-    public Muzix search(String trackName) {
+    public Muzix search(String trackName) throws TrackNotFoundException {
 
 //        List<Muzix> list=muzixRepository.findAll();
 //        Iterator itr=list.iterator();
@@ -63,6 +68,10 @@ public class MuzixServiceImpl implements MuzixService {
 //        return flag;
 
         Muzix muzix=muzixRepository.searchByName(trackName);
+        if(muzix==null)
+        {
+            throw new TrackNotFoundException("track you are searching is not found");
+        }
         return muzix;
 
     }

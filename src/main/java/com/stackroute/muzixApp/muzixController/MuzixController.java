@@ -1,5 +1,7 @@
 package com.stackroute.muzixApp.muzixController;
 
+import com.stackroute.muzixApp.exceptions.TrackAlreadyExistsException;
+import com.stackroute.muzixApp.exceptions.TrackNotFoundException;
 import com.stackroute.muzixApp.muzix.Muzix;
 import com.stackroute.muzixApp.muzixService.MuzixService;
 import io.swagger.annotations.Api;
@@ -32,7 +34,7 @@ public class MuzixController {
             muzixService.saveTrack(muzix);
             responseEntity=new ResponseEntity<String>("saved successfully", HttpStatus.CREATED);
         }
-        catch(Exception e){
+        catch(TrackAlreadyExistsException e){
             responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
@@ -45,11 +47,14 @@ public class MuzixController {
 
         int id=muzix.getTrackId();
 
-           boolean flag = muzixService.deleteTrack(id);
-           if(flag==true)
+
+          try{
+              muzixService.deleteTrack(id);
             responseEntity=new ResponseEntity<String>("successfully deleted",HttpStatus.ACCEPTED);
-           else
-               responseEntity=new ResponseEntity<String>("track not found",HttpStatus.CONFLICT);
+          }
+           catch(TrackNotFoundException e) {
+               responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+           }
 
         return responseEntity;
     }
@@ -77,7 +82,7 @@ public class MuzixController {
             muzixService.saveTrack(muzix);
             responseEntity=new ResponseEntity<String>("updated successfully", HttpStatus.CREATED);
         }
-        catch(Exception e){
+        catch(TrackAlreadyExistsException e){
             responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
@@ -93,7 +98,7 @@ public class MuzixController {
             Muzix muzix = muzixService.search(trackName);
             responseEntity=new ResponseEntity<Muzix>(muzix,HttpStatus.FOUND);
         }
-        catch(Exception e){
+        catch(TrackNotFoundException e){
             responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
 
