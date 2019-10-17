@@ -12,5 +12,7 @@ public interface MuzixService {
 
     public boolean deleteTrack(int id);
 
+    public Muzix search(String trackName);
+
 
 }

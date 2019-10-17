@@ -82,4 +82,20 @@ public class MuzixController {
         return responseEntity;
     }
 
+    @RequestMapping("search/{trackName}")
+    public ResponseEntity<?> searchByName(@PathVariable("trackName") String trackName){
+
+        ResponseEntity responseEntity;
+
+        try {
+            Muzix muzix = muzixService.search(trackName);
+            responseEntity=new ResponseEntity<Muzix>(muzix,HttpStatus.FOUND);
+        }
+        catch(Exception e){
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
+        }
+
+
+        return responseEntity;
+    }
 }
