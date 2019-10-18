@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service(value="DummyMuzixServiceImpl")
 public class DummyMuzixServiceImpl implements MuzixService{
-    MuzixRepository muzixRepository;
+    private MuzixRepository muzixRepository;
 
     @Autowired
     public DummyMuzixServiceImpl(MuzixRepository muzixRepository)
@@ -23,7 +23,7 @@ public class DummyMuzixServiceImpl implements MuzixService{
 
 
     @Override
-    public Muzix saveTrack(Muzix muzix) throws TrackAlreadyExistsException{
+    public Muzix saveTrack(Muzix muzix) throws TrackAlreadyExistsException,Exception{
         if(muzixRepository.existsById(muzix.getTrackId())){
             throw new TrackAlreadyExistsException("track you are trying to save already exists");
         }
@@ -32,26 +32,33 @@ public class DummyMuzixServiceImpl implements MuzixService{
     }
 
     @Override
-    public List<Muzix> displayTracks() {
+    public List<Muzix> displayTracks() throws TrackNotFoundException,Exception {
 
-        return muzixRepository.findAll();
+        List<Muzix> list= muzixRepository.findAll();
+        if(list.size()==0){
+            throw new TrackNotFoundException("No tracks are available in database");
+        }
+        return list;
     }
 
     @Override
-    public void  deleteTrack(int id)throws  TrackNotFoundException  {
+    public Muzix deleteTrack(int id)throws  TrackNotFoundException,Exception  {
 
+        Muzix muzix;
         if(!(muzixRepository.existsById(id)))
         {
             throw new TrackNotFoundException("track you are searching is not found");
         }
         else {
+            muzix=muzixRepository.getOne(id);
             muzixRepository.deleteById(id);
 
         }
+        return muzix;
     }
 
     @Override
-    public Muzix search(String trackName) throws TrackNotFoundException {
+    public Muzix search(String trackName) throws TrackNotFoundException,Exception {
 
 //        List<Muzix> list=muzixRepository.findAll();
 //        Iterator itr=list.iterator();

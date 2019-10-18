@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/muzix")
+@RequestMapping("/muzixapp")
 //@Api(value="onlinestore", description="Operations pertaining to products in Online Store")
 public class MuzixController {
 
@@ -28,8 +28,8 @@ public class MuzixController {
         this.muzixService=muzixService;
     }
 
-    @PostMapping("save")
-    public ResponseEntity<?> saveTrack(@RequestBody Muzix muzix) throws TrackAlreadyExistsException {
+    @PostMapping("track")
+    public ResponseEntity<?> saveTrack(@RequestBody Muzix muzix) throws TrackAlreadyExistsException, Exception{
         ResponseEntity responseEntity;
         muzixService.saveTrack(muzix);
         responseEntity=new ResponseEntity<String>("saved successfully", HttpStatus.CREATED);
@@ -44,13 +44,13 @@ public class MuzixController {
         return responseEntity;
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<?> deleteTrack(@RequestBody Muzix muzix) throws TrackNotFoundException {
+    @DeleteMapping("track")
+    public ResponseEntity<?> deleteTrack(@RequestBody Muzix muzix) throws TrackNotFoundException,Exception{
         ResponseEntity responseEntity;
 
         int id=muzix.getTrackId();
-        muzixService.deleteTrack(id);
-        responseEntity=new ResponseEntity<String>("successfully deleted",HttpStatus.ACCEPTED);
+        Muzix muzix1= muzixService.deleteTrack(id);
+        responseEntity=new ResponseEntity<String>("successfully deleted the below track: "+muzix1,HttpStatus.ACCEPTED);
 
 //
 //          try{
@@ -64,8 +64,8 @@ public class MuzixController {
         return responseEntity;
     }
 
-    @GetMapping("display")
-    public ResponseEntity<?> displayTracks(){
+    @GetMapping("tracks")
+    public ResponseEntity<?> displayTracks()throws TrackNotFoundException ,Exception{
         ResponseEntity responseEntity;
         responseEntity=new ResponseEntity<List<Muzix>>(muzixService.displayTracks(),HttpStatus.FOUND);
 //        try{
@@ -80,8 +80,8 @@ public class MuzixController {
 
     }
 
-    @PutMapping("update")
-    public ResponseEntity<?> saveOrUpdateTrack(@RequestBody Muzix muzix) throws TrackAlreadyExistsException {
+    @PutMapping("track")
+    public ResponseEntity<?> saveOrUpdateTrack(@RequestBody Muzix muzix) throws TrackAlreadyExistsException,Exception {
         ResponseEntity responseEntity;
 
         muzixService.saveTrack(muzix);
@@ -97,8 +97,8 @@ public class MuzixController {
         return responseEntity;
     }
 
-    @RequestMapping("search/{trackName}")
-    public ResponseEntity<?> searchByName(@PathVariable("trackName") String trackName) throws TrackNotFoundException {
+    @RequestMapping("track/{trackName}")
+    public ResponseEntity<?> searchByName(@PathVariable("trackName") String trackName) throws TrackNotFoundException ,Exception{
 
         ResponseEntity responseEntity;
 
